@@ -41,6 +41,11 @@ public class SharepointServiceTest {
         byte[] test = sharepointService.downloadItem("path/to/file");
     }
 
+    @Test
+    public void createPrivateUrl(){
+        sharepointService.createPrivateUrl("path/to/fileorfolder");
+    }
+
 
 
 
