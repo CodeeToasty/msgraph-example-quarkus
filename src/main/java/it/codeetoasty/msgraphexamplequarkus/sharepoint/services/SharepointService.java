@@ -11,6 +11,7 @@ import com.microsoft.kiota.RequestInformation;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -30,14 +31,9 @@ public class SharepointService {
     @Inject
     GraphServiceClient graphClient;
 
-    private String rootId;
-
-    @PostConstruct
-    public void getRootId() throws Exception {
-        rootId = graphClient.sites().bySiteId(siteId)
-                .drives().get().getValue().get(0).getId();
-    }
-
+    @Inject
+    @Named("sharepointrootId")
+    String rootId;
 
     /**
      * this method formats every path with the right syntax, so that Graph Api can us it.

@@ -4,6 +4,7 @@ import com.azure.identity.ClientSecretCredential;
 import com.azure.identity.ClientSecretCredentialBuilder;
 import com.microsoft.graph.serviceclient.GraphServiceClient;
 import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -11,6 +12,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 public class SharepointProducer {
 
     GraphServiceClient graphClient;
+
+    String rootId;
 
     @ConfigProperty(name = "sharepoint.site.id")
     String siteId;
@@ -33,5 +36,14 @@ public class SharepointProducer {
                 .clientId(clientId).tenantId(tenantId).clientSecret(secret).build();
         graphClient = new GraphServiceClient(credential, scopes);
         return graphClient;
+    }
+
+    @Produces
+    @Named("sharepointRootId")
+    public String produceRootId(){
+        if(rootId == null ){
+            rootId = graphClient.sites().bySiteId(siteId).drives().get().getValue().get(0).getId();
+        }
+        return rootId;
     }
 }
